@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Aklia</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+    --bg: #0c0d0e;
+    --bg-soft: #131516;
+
+    --panel: rgba(24, 25, 27, 0.78);
+    --panel-solid: #181a1c;
+
+    --border: rgba(255,255,255,0.09);
+    --border-light: rgba(255,255,255,0.14);
+
+    --text: #f4f2ee;
+    --muted: #94979b;
+    --muted-light: #b9bbbd;
+
+    --accent: #ff695c;
+    --accent-dark: #d94e44;
+    --accent-soft: rgba(255,105,92,0.14);
+
+    --protein: #ff695c;
+    --carbs: #c7c9cc;
+    --fat: #777b80;
+
+    --success: #8fd1b0;
+    --warning: #e7b978;
+    --danger: #ff756a;
+
+    --sans: "DM Sans", sans-serif;
+    --serif: "Playfair Display", serif;
+    --mono: "IBM Plex Mono", monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 75% 10%,
+            rgba(255,105,92,0.08),
+            transparent 32%
+        ),
+        var(--bg);
+
+    color: var(--text);
+    font-family: var(--sans);
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.page-background {
+    position: fixed;
+    inset: 0;
+
+    z-index: -2;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,9,10,0.28) 0%,
+            rgba(8,9,10,0.78) 55%,
+            rgba(8,9,10,1) 100%
+        ),
+        url("https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=2400&q=90")
+        center top / cover no-repeat;
+
+    opacity: 0.55;
+}
+
+.page-background::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7,8,9,0.9),
+            rgba(7,8,9,0.35),
+            rgba(7,8,9,0.75)
+        );
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.nav {
+    width: 100%;
+
+    padding:
+        26px
+        max(28px, calc((100vw - 1240px) / 2));
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    letter-spacing: -0.04em;
+}
+
+.brand-mark {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 9px;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--accent);
+    color: #17100f;
+
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    box-shadow: 0 0 14px rgba(143,209,176,0.55);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main {
+    width: min(1180px, calc(100% - 40px));
+
+    margin: 0 auto;
+
+    padding: 70px 0 120px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    max-width: 820px;
+
+    margin-bottom: 55px;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 22px;
+
+    color: var(--muted-light);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.eyebrow-line {
+    width: 28px;
+    height: 1px;
+
+    background: var(--accent);
+}
+
+h1 {
+    margin: 0;
+
+    max-width: 850px;
+
+    font-family: var(--serif);
+
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+
+    font-weight: 500;
+}
+
+.hero-description {
+    max-width: 600px;
+
+    margin-top: 28px;
+
+    color: var(--muted-light);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   INPUT SECTION
+========================================================= */
+
+.analyzer-shell {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 1fr 0.72fr;
+
+    gap: 1px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    background: rgba(255,255,255,0.04);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.35),
+        inset 0 1px rgba(255,255,255,0.03);
+
+    backdrop-filter: blur(24px);
+}
+
+.analyzer-form {
+    padding: 38px;
+
+    background: rgba(17,18,19,0.82);
+}
+
+.form-header {
+    margin-bottom: 34px;
+}
+
+.form-kicker {
+    color: var(--accent);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.form-title {
+    margin: 8px 0 0;
+
+    font-size: 25px;
+    letter-spacing: -0.035em;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    color: #d7d7d5;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.optional {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 400;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    background: rgba(255,255,255,0.045);
+
+    color: var(--text);
+
+    font-family: var(--sans);
+    font-size: 15px;
+
+    padding: 15px 16px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #696d70;
+}
+
+input:focus,
+textarea:focus {
+    border-color: rgba(255,105,92,0.65);
+
+    background: rgba(255,255,255,0.065);
+
+    box-shadow:
+        0 0 0 4px rgba(255,105,92,0.08);
+}
+
+textarea {
+    min-height: 150px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
+.analyze-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    margin-top: 10px;
+
+    padding: 16px 20px;
+
+    border: 0;
+    border-radius: 13px;
+
+    background: var(--accent);
+
+    color: #1a100f;
+
+    font-family: var(--sans);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.analyze-button:hover {
+    background: #ff796d;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 12px 30px rgba(255,105,92,0.2);
+}
+
+.analyze-button:active {
+    transform: translateY(0);
+}
+
+.analyze-button:disabled {
+    opacity: 0.55;
+
+    cursor: wait;
+
+    transform: none;
+}
+
+.button-arrow {
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   SIDE VISUAL
+========================================================= */
+
+.analyzer-visual {
+    position: relative;
+
+    min-height: 460px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(10,10,11,0.05),
+            rgba(10,10,11,0.75)
+        ),
+        url("https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1600&q=90")
+        center / cover no-repeat;
+}
+
+.analyzer-visual::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 20%,
+            rgba(8,9,10,0.88) 100%
+        );
+}
+
+.visual-content {
+    position: absolute;
+
+    z-index: 2;
+
+    left: 32px;
+    right: 32px;
+    bottom: 32px;
+}
+
+.visual-label {
+    display: inline-block;
+
+    padding: 7px 10px;
+
+    border: 1px solid rgba(255,255,255,0.14);
+
+    border-radius: 100px;
+
+    background: rgba(10,10,10,0.4);
+
+    color: #d7d7d5;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    backdrop-filter: blur(10px);
+}
+
+.visual-title {
+    margin: 14px 0 0;
+
+    max-width: 350px;
+
+    font-family: var(--serif);
+
+    font-size: 32px;
+    line-height: 1.1;
+
+    letter-spacing: -0.035em;
+}
+
+.visual-copy {
+    max-width: 380px;
+
+    margin-top: 12px;
+
+    color: #b8b9ba;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results {
+    display: none;
+
+    margin-top: 80px;
+
+    animation: resultsIn 0.65s ease both;
+}
+
+.results.visible {
+    display: block;
+}
+
+@keyframes resultsIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.results-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.results-eyebrow {
+    color: var(--accent);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.results-title {
+    margin: 7px 0 0;
+
+    font-family: var(--serif);
+
+    font-size: 38px;
+
+    letter-spacing: -0.04em;
+}
+
+.results-date {
+    color: var(--muted);
+
+    font-family: var(--mono);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   DASHBOARD GRID
+========================================================= */
+
+.dashboard {
+    display: grid;
+
+    grid-template-columns:
+        1.05fr
+        1fr
+        1fr;
+
+    gap: 14px;
+}
+
+.card {
+    position: relative;
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.065),
+            rgba(255,255,255,0.025)
+        );
+
+    padding: 26px;
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.18),
+        inset 0 1px rgba(255,255,255,0.025);
+}
+
+.card-label {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.calorie-card {
+    grid-row: span 2;
+
+    min-height: 360px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    overflow: hidden;
+}
+
+.calorie-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    top: -120px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    opacity: 0.08;
+
+    filter: blur(50px);
+}
+
+.calorie-number {
+    position: relative;
+
+    margin-top: 25px;
+
+    font-family: var(--serif);
+
+    font-size: clamp(62px, 7vw, 92px);
+
+    line-height: 0.9;
+
+    letter-spacing: -0.055em;
+}
+
+.calorie-unit {
+    margin-top: 12px;
+
+    color: var(--muted);
+
+    font-family: var(--mono);
+
+    font-size: 12px;
+}
+
+.calorie-footer {
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+
+    color: var(--muted-light);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   MACROS
+========================================================= */
+
+.macro-card {
+    min-height: 175px;
+}
+
+.macro-layout {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    margin-top: 18px;
+}
+
+.macro-ring {
+    position: relative;
+
+    flex: 0 0 104px;
+
+    width: 104px;
+    height: 104px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            var(--protein) 0deg 120deg,
+            var(--carbs) 120deg 240deg,
+            var(--fat) 240deg 360deg
+        );
+
+    transform: rotate(-90deg);
+}
+
+.macro-ring::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 11px;
+
+    border-radius: 50%;
+
+    background: #151718;
+}
+
+.macro-ring-center {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    display: grid;
+    place-items: center;
+
+    transform: rotate(90deg);
+
+    font-family: var(--mono);
+
+    font-size: 11px;
+
+    color: var(--muted);
+}
+
+.macro-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    min-width: 0;
+}
+
+.macro-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--muted-light);
+
+    font-size: 12px;
+}
+
+.macro-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+.macro-dot.protein {
+    background: var(--protein);
+}
+
+.macro-dot.carbs {
+    background: var(--carbs);
+}
+
+.macro-dot.fat {
+    background: var(--fat);
+}
+
+
+/* =========================================================
+   FOOD LOG
+========================================================= */
+
+.food-card {
+    grid-column: span 2;
+
+    padding: 0;
+
+    overflow: hidden;
+}
+
+.food-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 25px 26px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.food-count {
+    color: var(--muted);
+
+    font-family: var(--mono);
+
+    font-size: 11px;
+}
+
+.food-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.food-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 17px 26px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+
+    transition: background 0.2s ease;
+}
+
+.food-row:last-child {
+    border-bottom: 0;
+}
+
+.food-row:hover {
+    background: rgba(255,255,255,0.025);
+}
+
+.food-name {
+    min-width: 0;
+
+    color: #e7e6e3;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.food-note {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.food-calories {
+    flex-shrink: 0;
+
+    color: #f2f1ed;
+
+    font-family: var(--mono);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   GOAL ANALYSIS
+========================================================= */
+
+.goal-card {
+    grid-column: 1 / -1;
+
+    margin-top: 2px;
+
+    padding: 34px;
+
+    border-color: rgba(255,105,92,0.18);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,105,92,0.075),
+            rgba(255,255,255,0.025)
+        );
+}
+
+.goal-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.goal-icon {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    background: var(--accent-soft);
+
+    color: var(--accent);
+
+    font-size: 16px;
+}
+
+.goal-card h3 {
+    margin: 0;
+
+    font-family: var(--serif);
+
+    font-size: 24px;
+
+    font-weight: 500;
+}
+
+.goal-analysis {
+    color: #c9c9c7;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error-banner {
+    margin-top: 30px;
+
+    padding: 20px;
+
+    border: 1px solid rgba(255,105,92,0.2);
+
+    border-radius: 14px;
+
+    background: rgba(255,105,92,0.06);
+
+    color: #f1cfcc;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-state {
+    display: none;
+
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 25px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.loading-state.visible {
+    display: flex;
+}
+
+.loading-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.25;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    margin-top: 100px;
+
+    padding-top: 22px;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #626568;
+
+    font-size: 11px;
+}
+
+.footer-brand {
+    color: #8b8d8f;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .analyzer-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .analyzer-visual {
+        min-height: 360px;
+    }
+
+    .dashboard {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .calorie-card {
+        grid-row: auto;
+        grid-column: span 2;
+        min-height: 280px;
+    }
+
+    .food-card {
+        grid-column: span 2;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .nav {
+        padding: 20px;
+    }
+
+    main {
+        width: min(100% - 28px, 1180px);
+
+        padding-top: 48px;
+    }
+
+    h1 {
+        font-size: 50px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .analyzer-form {
+        padding: 24px;
+    }
+
+    .analyzer-visual {
+        min-height: 320px;
+    }
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .calorie-card,
+    .food-card,
+    .goal-card {
+        grid-column: auto;
+    }
+
+    .results-header {
+        display: block;
+    }
+
+    .results-date {
+        margin-top: 12px;
+    }
+
+    .macro-layout {
+        justify-content: space-between;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page-background"></div>
+
+
+<!-- ======================================================
+     NAVIGATION
+====================================================== -->
+
+<nav class="nav">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            P
+        </div>
+
+        Aklia
+
+    </div>
+
+    <div class="nav-status">
+
+        <span class="status-dot"></span>
+
+        AI nutrition analysis
+
+    </div>
+
+</nav>
+
+
+<main>
+
+
+<!-- ======================================================
+     HERO
+====================================================== -->
+
+<section class="hero">
+
+    <div class="eyebrow">
+
+        <span class="eyebrow-line"></span>
+
+        Daily nutrition intelligence
+
+    </div>
+
+    <h1>
+        Understand what
+        you actually ate.
+    </h1>
+
+    <p class="hero-description">
+        Tell Aklia your goal and what you ate today.
+        Your meals are analyzed for calories, macronutrients,
+        and how well they align with what you're trying to achieve.
+    </p>
+
+</section>
+
+
+<!-- ======================================================
+     ANALYZER
+====================================================== -->
+
+<section class="analyzer-shell">
+
+
+    <form id="log-form" class="analyzer-form">
+
+        <div class="form-header">
+
+            <div class="form-kicker">
+                Today's analysis
+            </div>
+
+            <div class="form-title">
+                Tell us about your day
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="goal">
+
+                Your goal
+
+                <span class="optional">
+                    Optional
+                </span>
+
+            </label>
+
+            <input
+                type="text"
+                id="goal"
+                name="goal"
+                placeholder="Lose fat, gain muscle, maintain weight..."
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="meals">
+                What did you eat today?
+            </label>
+
+            <textarea
+                id="meals"
+                name="meals"
+                placeholder="Describe everything you ate today. Include drinks, snacks and meals..."
+                required
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="submit"
+            id="submit-btn"
+            class="analyze-button"
+        >
+
+            <span>
+                Analyze my day
+            </span>
+
+            <span class="button-arrow">
+                →
+            </span>
+
+        </button>
+
+
+        <div
+            id="loading-state"
+            class="loading-state"
+        >
+
+            <span class="loading-dot"></span>
+
+            Analyzing your meals...
+
+        </div>
+
+    </form>
+
+
+    <div class="analyzer-visual">
+
+        <div class="visual-content">
+
+            <span class="visual-label">
+                Nutrition intelligence
+            </span>
+
+            <div class="visual-title">
+                From a meal description to a clearer picture of your day.
+            </div>
+
+            <div class="visual-copy">
+                Aklia breaks down the foods you mention,
+                estimates their nutritional contribution and
+                connects the results with your personal goal.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     RESULTS
+====================================================== -->
+
+<section
+    id="results"
+    class="results"
+>
+
+</section>
+
+
+<footer>
+
+    <span class="footer-brand">
+        Aklia
+    </span>
+
+    <span>
+        AI-assisted nutrition analysis
+    </span>
+
+</footer>
+
+
+</main>
+
+
+<script>
+
+const form = document.getElementById("log-form");
+
+const submitBtn =
+    document.getElementById("submit-btn");
+
+const resultsEl =
+    document.getElementById("results");
+
+const loadingState =
+    document.getElementById("loading-state");
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function fmt(value) {
+
+    const number = Number(value) || 0;
+
+    return Math.round(number).toLocaleString();
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function clamp(value, min, max) {
+
+    return Math.min(
+        Math.max(Number(value) || 0, min),
+        max
+    );
+
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function renderResults(data) {
+
+    const items =
+        Array.isArray(data.items)
+            ? data.items
+            : [];
+
+    const totals =
+        data.totals || {};
+
+    const macros =
+        data.macro_percentages || {};
+
+
+    const totalCalories =
+        totals.calories || 0;
+
+
+    const proteinPct =
+        clamp(macros.protein_pct, 0, 100);
+
+    const carbsPct =
+        clamp(macros.carbs_pct, 0, 100);
+
+    const fatPct =
+        clamp(macros.fat_pct, 0, 100);
+
+
+    /* -----------------------------------------------------
+       FOOD ROWS
+    ----------------------------------------------------- */
+
+    const rows = items.map(item => {
+
+        const notes = [];
+
+        if (item.matched === false) {
+
+            notes.push(
+                "not found in nutrition database"
+            );
+
+        }
+
+        if (item.unit_conversion_estimated) {
+
+            notes.push(
+                "amount estimated"
+            );
+
+        }
+
+        if (item.matched_to) {
+
+            notes.push(
+                `${item.grams}g · ${String(item.matched_to).split(" (")[0]}`
+            );
+
+        }
+
+
+        const noteHTML =
+            notes.length
+                ? `
+                    <div class="food-note">
+                        ${escapeHtml(notes.join(" · "))}
+                    </div>
+                  `
+                : "";
+
+
+        return `
+            <div class="food-row">
+
+                <div class="food-name">
+
+                    ${escapeHtml(item.name)}
+
+                    ${noteHTML}
+
+                </div>
+
+                <div class="food-calories">
+
+                    ${fmt(item.calories)} kcal
+
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+
+
+    /* -----------------------------------------------------
+       MACRO GRADIENT
+    ----------------------------------------------------- */
+
+    const totalPct =
+        proteinPct +
+        carbsPct +
+        fatPct;
+
+
+    let proteinDegree = 0;
+    let carbsDegree = 0;
+
+    if (totalPct > 0) {
+
+        proteinDegree =
+            (proteinPct / totalPct) * 360;
+
+        carbsDegree =
+            proteinDegree +
+            (carbsPct / totalPct) * 360;
+
+    } else {
+
+        proteinDegree = 120;
+        carbsDegree = 240;
+
+    }
+
+
+    const macroBackground = `
+        conic-gradient(
+            var(--protein) 0deg ${proteinDegree}deg,
+            var(--carbs) ${proteinDegree}deg ${carbsDegree}deg,
+            var(--fat) ${carbsDegree}deg 360deg
+        )
+    `;
+
+
+    /* -----------------------------------------------------
+       GOAL ANALYSIS
+    ----------------------------------------------------- */
+
+    const goalHTML =
+        data.goal_analysis
+            ? `
+                <div class="card goal-card">
+
+                    <div class="goal-card-header">
+
+                        <div class="goal-icon">
+                            ✦
+                        </div>
+
+                        <h3>
+                            Your goal, considered
+                        </h3>
+
+                    </div>
+
+                    <div class="goal-analysis">
+                        ${escapeHtml(data.goal_analysis)}
+                    </div>
+
+                </div>
+              `
+            : "";
+
+
+    /* -----------------------------------------------------
+       RENDER
+    ----------------------------------------------------- */
+
+    resultsEl.innerHTML = `
+
+        <div class="results-header">
+
+            <div>
+
+                <div class="results-eyebrow">
+                    Analysis complete
+                </div>
+
+                <div class="results-title">
+                    Your day at a glance
+                </div>
+
+            </div>
+
+            <div class="results-date">
+                ${new Date().toLocaleDateString(
+                    undefined,
+                    {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric"
+                    }
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="dashboard">
+
+
+            <!-- CALORIES -->
+
+            <div class="card calorie-card">
+
+                <div>
+
+                    <div class="card-label">
+                        Total energy
+                    </div>
+
+                    <div class="calorie-number">
+                        ${fmt(totalCalories)}
+                    </div>
+
+                    <div class="calorie-unit">
+                        KCAL ESTIMATED
+                    </div>
+
+                </div>
+
+
+                <div class="calorie-footer">
+
+                    Based on the foods and quantities
+                    identified from today's description.
+
+                </div>
+
+            </div>
+
+
+            <!-- MACROS -->
+
+            <div class="card macro-card">
+
+                <div class="card-label">
+                    Macro distribution
+                </div>
+
+
+                <div class="macro-layout">
+
+                    <div
+                        class="macro-ring"
+                        style="background:${macroBackground}"
+                    >
+
+                        <div class="macro-ring-center">
+                            MACROS
+                        </div>
+
+                    </div>
+
+
+                    <div class="macro-list">
+
+                        <div class="macro-item">
+
+                            <span class="macro-dot protein"></span>
+
+                            Protein
+                            ${Math.round(proteinPct)}%
+
+                        </div>
+
+
+                        <div class="macro-item">
+
+                            <span class="macro-dot carbs"></span>
+
+                            Carbs
+                            ${Math.round(carbsPct)}%
+
+                        </div>
+
+
+                        <div class="macro-item">
+
+                            <span class="macro-dot fat"></span>
+
+                            Fat
+                            ${Math.round(fatPct)}%
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEAL COUNT -->
+
+            <div class="card macro-card">
+
+                <div class="card-label">
+                    Foods identified
+                </div>
+
+                <div
+                    style="
+                        margin-top:24px;
+                        font-family:var(--serif);
+                        font-size:54px;
+                        line-height:1;
+                        letter-spacing:-0.05em;
+                    "
+                >
+                    ${items.length}
+                </div>
+
+                <div
+                    style="
+                        margin-top:12px;
+                        color:var(--muted);
+                        font-size:12px;
+                    "
+                >
+                    items analyzed from your entry
+                </div>
+
+            </div>
+
+
+            <!-- FOOD LOG -->
+
+            <div class="card food-card">
+
+                <div class="food-card-header">
+
+                    <div class="card-label">
+                        Food breakdown
+                    </div>
+
+                    <div class="food-count">
+                        ${items.length} ITEMS
+                    </div>
+
+                </div>
+
+
+                <div class="food-list">
+
+                    ${
+                        rows ||
+                        `
+                            <div class="food-row">
+                                <div class="food-name">
+                                    No food items were identified.
+                                </div>
+                            </div>
+                        `
+                    }
+
+                </div>
+
+            </div>
+
+
+            ${goalHTML}
+
+
+        </div>
+    `;
+
+
+    resultsEl.classList.add("visible");
+
+
+    setTimeout(() => {
+
+        resultsEl.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }, 100);
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function renderError(message) {
+
+    resultsEl.innerHTML = `
+
+        <div class="error-banner">
+
+            ${escapeHtml(message)}
+
+        </div>
+
+    `;
+
+    resultsEl.classList.add("visible");
+
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+form.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+
+        const goal =
+            document
+                .getElementById("goal")
+                .value
+                .trim();
+
+
+        const meals =
+            document
+                .getElementById("meals")
+                .value
+                .trim();
+
+
+        if (!meals) {
+
+            return;
+
+        }
+
+
+        submitBtn.disabled = true;
+
+        submitBtn.querySelector("span:first-child")
+            .textContent = "Analyzing...";
+
+        loadingState.classList.add("visible");
+
+        resultsEl.classList.remove("visible");
+
+        resultsEl.innerHTML = "";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/analyze",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            goal,
+                            meals
+                        })
+                    }
+                );
+
+
+            let data;
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch {
+
+                throw new Error(
+                    "Invalid server response."
+                );
+
+            }
+
+
+            if (data.ok) {
+
+                renderResults(data);
+
+            } else {
+
+                renderError(
+                    data.message ||
+                    "Something went wrong while analyzing your meals."
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            renderError(
+                "Could not reach the nutrition analysis service. Please try again."
+            );
+
+        } finally {
+
+            submitBtn.disabled = false;
+
+            submitBtn.querySelector("span:first-child")
+                .textContent = "Analyze my day";
+
+            loadingState.classList.remove("visible");
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,101 @@
+{
+  "pizza": {
+    "fdc_id": 172095,
+    "description": "Pizza, meat topping, thick crust, frozen, cooked",
+    "per_100g": {
+      "calories": 274,
+      "protein_g": 11.8,
+      "carbs_g": 30.8,
+      "fat_g": 11.5,
+      "sugar_g": 3.88
+    }
+  },
+  "bulgur": {
+    "fdc_id": 170287,
+    "description": "Bulgur, cooked",
+    "per_100g": {
+      "calories": 83.0,
+      "protein_g": 3.08,
+      "carbs_g": 18.6,
+      "fat_g": 0.24,
+      "sugar_g": 0.1
+    }
+  },
+  "parsley": {
+    "fdc_id": 170416,
+    "description": "Parsley, fresh",
+    "per_100g": {
+      "calories": 36.0,
+      "protein_g": 2.97,
+      "carbs_g": 6.33,
+      "fat_g": 0.79,
+      "sugar_g": 0.85
+    }
+  },
+  "tomato": {
+    "fdc_id": 2685578,
+    "description": "Tomatoes, whole, canned, solids and liquids, with salt added",
+    "per_100g": {
+      "calories": 22.5,
+      "protein_g": 0.868,
+      "carbs_g": 4.29,
+      "fat_g": 0.206,
+      "sugar_g": 0
+    }
+  },
+  "cucumber": {
+    "fdc_id": 169225,
+    "description": "Cucumber, peeled, raw",
+    "per_100g": {
+      "calories": 10.0,
+      "protein_g": 0.59,
+      "carbs_g": 2.16,
+      "fat_g": 0.16,
+      "sugar_g": 1.38
+    }
+  },
+  "onion": {
+    "fdc_id": 170000,
+    "description": "Onions, raw",
+    "per_100g": {
+      "calories": 40.0,
+      "protein_g": 1.1,
+      "carbs_g": 9.34,
+      "fat_g": 0.1,
+      "sugar_g": 4.24
+    }
+  },
+  "olive oil": {
+    "fdc_id": 167737,
+    "description": "Oil, corn, peanut, and olive",
+    "per_100g": {
+      "calories": 884,
+      "protein_g": 0.0,
+      "carbs_g": 0.0,
+      "fat_g": 100,
+      "sugar_g": 0.0
+    }
+  },
+  "lemon juice": {
+    "fdc_id": 167747,
+    "description": "Lemon juice, raw",
+    "per_100g": {
+      "calories": 22.0,
+      "protein_g": 0.35,
+      "carbs_g": 6.9,
+      "fat_g": 0.24,
+      "sugar_g": 2.52
+    }
+  },
+  "potatoes, fried": {
+    "fdc_id": 168946,
+    "description": "Potatoes, french fried, wedge cut, frozen, unprepared",
+    "per_100g": {
+      "calories": 162,
+      "protein_g": 2.56,
+      "carbs_g": 22.2,
+      "fat_g": 7.47,
+      "sugar_g": 0.34
+    }
+  }
+}
