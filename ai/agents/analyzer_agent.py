@@ -75,8 +75,6 @@ class USDALookupError(Exception):
     simply has no match (that's a valid outcome that triggers the OFF
     fallback, not a retry)."""
 
-
-
 def _norm_word(word: str) -> str:
     word = word.strip().lower()
     if word.endswith("ies") and len(word) > 3:
@@ -86,9 +84,6 @@ def _norm_word(word: str) -> str:
     if word.endswith("s") and not word.endswith("ss") and len(word) > 1:
         return word[:-1]
     return word
-
-
-# Foods people log as COOKED unless they explicitly say raw/dry/uncooked.
 COOKED_BY_DEFAULT = {_norm_word(w) for w in (
     "rice", "pasta", "spaghetti", "macaroni", "noodle", "quinoa", "couscous", "bulgur",
     "lentil", "bean", "chickpea", "chicken", "turkey", "beef", "pork", "lamb", "veal",
@@ -106,14 +101,10 @@ PROCESSING_PENALTY_KEYWORDS = (
     "jam", "jelly", "paste", "smoked", "cured", "pickled",
     "frozen", "french", "mashed", "flakes", "hash", "puffed", "snack",
 )
-# Entries whose 2nd segment is one of these are the plain/default form.
 GENERIC_SEGMENT_WORDS = {
     "raw", "wheat", "white", "whole-wheat", "whole wheat", "plain", "original",
     "unsweetened", "cooked", "whole",
 }
-# USDA files some foods under a category head ("Fish, salmon, ...",
-# "Cereals, oats, ...", "Nuts, almonds, ..."). For these the food name is the
-# FIRST WORD OF THE SECOND SEGMENT.
 NON_DEFAULT_KEYWORDS = ("parboiled", "instant", "glutinous", "precooked", "imitation")
 VARIETY_WORDS = {
     "fuji", "gala", "golden", "delicious", "granny", "smith", "honeycrisp", "braeburn",
@@ -121,9 +112,6 @@ VARIETY_WORDS = {
 }
 CATEGORY_HEADS = {"fish", "crustacean", "mollusk", "cereal", "nut", "seed"}
 
-# When the user gave no cut/variety ("chicken", "egg", "salmon"), prefer the
-# everyday one instead of whatever entry happens to have the shortest name
-# (otherwise bare "chicken" can land on chicken feet or liver).
 DEFAULT_CUT_BONUS = {
     "chicken": (("breast", 40), ("meat only", 10)),
     "turkey": (("breast", 40), ("meat only", 10)),
@@ -132,7 +120,6 @@ DEFAULT_CUT_BONUS = {
     "egg": (("whole", 30), ("hard-boiled", 10)),
     "salmon": (("atlantic", 20), ("farmed", 10)),
     "apple": (("with skin", 5),),
-    # 150 so it also beats the generic-"white" bonus that "Cheese, white, queso blanco" gets
     "cheese": (("cheddar", 150),),
     "rice": (("long-grain", 20), ("regular", 10)),
 }
@@ -140,7 +127,6 @@ DEFAULT_CUT_BONUS = {
 
 def _desc_words(description: str) -> set[str]:
     return {_norm_word(w) for w in re.split(r"[,\s()/]+", description.lower()) if w}
-
 
 def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None = None) -> list[dict]:
     """Returns ALL candidates that are really the requested food, best first.
@@ -164,8 +150,7 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
     elif explicit_cooked or head_word in COOKED_BY_DEFAULT:
         state_pref = "cooked"
     else:
-        state_pref = None  # fruit/veg/dairy/etc: old behaviour (plain/raw default)
-
+        state_pref = None 
     matches = []
     for food in foods:
         segs = [s.strip() for s in food.get("description", "").split(",")]
@@ -174,26 +159,21 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
             continue
         first = _norm_word(segment_words[0])
         desc_all = _desc_words(food.get("description", ""))
-        # multi-word queries ("olive oil", "peanut butter", "chicken breast"):
-        # every word of the query must appear in the USDA description
         all_words_present = all(w in desc_all for w in query_words)
         if first == head_word:
             if len(query_words) > 1 and not all_words_present:
-                continue  # "Olives, green..." is not "olive oil"
-            # "Rice noodles", "Rice bran", "Rice flour" are not rice - unless the
-            # user's own query text asked for that extra word.
+                continue 
             extra = [_norm_word(w) for w in segment_words[1:]]
             if extra and not all(w in query_words for w in extra):
                 continue
         elif len(query_words) > 1 and first in query_words and all_words_present:
-            pass  # USDA files it under the other word: "Oil, olive, salad or cooking"
+            pass 
         elif first in CATEGORY_HEADS and len(segs) > 1 and segs[1].split() \
                 and _norm_word(segs[1].split()[0]) == head_word:
-            pass  # e.g. "Fish, salmon, Atlantic, farmed, cooked, dry heat"
+            pass 
         else:
             continue
         matches.append(food)
-
     if not matches:
         print(f"[analyzer_node] USDA has no entry headed by '{head_word}' for query '{query}' "
               f"- falling through to Open Food Facts / AI estimate.")
@@ -202,15 +182,12 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
     def _qmatch(qw: str, dw: set[str]) -> bool:
         if qw in dw:
             return True
-        # grilled/broiled/roasted/... are interchangeable in USDA's wording
         return qw in COOKING_WORDS and bool(dw & COOKING_WORDS)
 
     qualifiers_matched_something = any(
         _qmatch(qw, _desc_words(f.get("description", ""))) for f in matches for qw in qualifier_words
     )
     prefer_generic_variant = not qualifier_words or not qualifiers_matched_something
-    # Did the user name a specific cut/variety ("breast", "brown", "fuji")?
-    # Cooking/raw words don't count - "grilled chicken" still needs a default cut.
     cut_specified = any(
         qw not in COOKING_WORDS and qw not in RAW_WORDS
         and any(qw in _desc_words(f.get("description", "")) for f in matches)
@@ -222,8 +199,6 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
         segments = [s.strip() for s in description.split(",")]
         dw = _desc_words(description)
         value = 0.0
-
-        # cooked / raw state (dominates everything except an explicit qualifier)
         has_cooked = bool(dw & COOKING_WORDS)
         has_raw = bool(dw & RAW_WORDS)
         if state_pref == "cooked":
@@ -246,16 +221,11 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
 
         for qw in qualifier_words:
             if qw in dw:
-                # exact word match; an explicitly requested cooking method
-                # ("grilled") must beat merely-similar ones ("fried", "stewed")
                 value -= 30 if qw in COOKING_WORDS else 5
             elif _qmatch(qw, dw):
-                value -= 3  # synonym match (grilled ~ broiled/roasted)
-        # a cooking method the user did NOT ask for shouldn't win by accident
+                value -= 3  
         if "fried" in dw and "fried" not in qualifier_words:
             value += 20
-        # no cooking method requested -> prefer the plain roasted entry over
-        # fried/stewed/etc. (e.g. bare "chicken" or "chicken breast")
         if not explicit_cooked and head_word in ("chicken", "turkey") and "roasted" in description:
             value -= 15
         if not cut_specified:
@@ -264,18 +234,14 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
                     value -= bonus
         if prefer_generic_variant or not cut_specified:
             original = food.get("description", "")
-            # branded entries ("...cooked, UNCLE BENS") are never the generic answer
             brand_tokens = [t for t in re.findall(r"\b[A-Z]{3,}\b", original)
                             if t not in {"USDA", "NFS", "RTE", "NS"}]
             if brand_tokens:
                 value += 30
-            # unusual forms only win if the user asked for them
             value += 25 * sum(1 for kw in NON_DEFAULT_KEYWORDS
                               if kw in dw and kw not in qualifier_words)
-            # named varieties ("golden delicious", "navels") differ slightly from the plain entry
             value += 8 * sum(1 for kw in VARIETY_WORDS
                              if kw in dw and kw not in qualifier_words)
-        # deterministic tie-breakers
         return (value, len(description), food.get("fdcId") or 0)
 
     ranked = sorted(matches, key=score)
@@ -283,7 +249,6 @@ def _rank_usda_matches(query: str, foods: list[dict], qualifier_hint: str | None
           f"'{ranked[0].get('description')}' (fdcId={ranked[0].get('fdcId')}), "
           f"{len(ranked)} candidates share the headword")
     return ranked
-
 
 def _usda_search(term: str) -> list[dict]:
     params = {
@@ -379,10 +344,7 @@ def _extract_usda_nutrients_per_100g(food_record: dict) -> dict:
     return result
 
 
-# ---------------------------------------------------------------------------
 # Open Food Facts (fallback source — free, keyless)
-# ---------------------------------------------------------------------------
-
 def _lookup_off(name: str) -> dict | None:
     """Search Open Food Facts. Returns per-100g nutrients dict, or None.
     Non-critical: any failure here just means the item ends up unmatched,
@@ -394,7 +356,7 @@ def _lookup_off(name: str) -> dict | None:
         "action": "process",
         "json": 1,
         "page_size": 1,
-        "sort_by": "unique_scans_n",  # prefer well-known/popular products over obscure ones
+        "sort_by": "unique_scans_n",  
     }
     try:
         resp = requests.get(OFF_SEARCH_URL, params=params, headers=OFF_HEADERS, timeout=10)
@@ -547,7 +509,7 @@ def _build_item(name: str, per_100g: dict, item: dict, portions: list[dict], sou
         "needs_confirmation": False,
         "unit_conversion_estimated": was_estimated,
         "source": source,
-        "matched_to": matched_to,          # exactly which food we matched (shown in the UI)
+        "matched_to": matched_to,         
         "grams": round(grams, 1),
         "alternatives": alternatives or [],
         "calories": per_100g["calories"] * scale,
@@ -567,7 +529,6 @@ def analyze_nutrition(state: FoodState) -> FoodState:
         for item in state["parser_output"]:
             name = item["name"]
 
-            # 1. Confirmed-match cache (only ever holds validated matches).
             cached = get_cached_match(name)
             if cached is not None and _is_plausible(cached.get("per_100g")):
                 print(f"[analyzer_node] '{name}' from CACHE -> '{cached['description']}' "
@@ -576,7 +537,6 @@ def analyze_nutrition(state: FoodState) -> FoodState:
                                                 cached.get("description")))
                 continue
 
-            # 2. USDA: walk the ranked candidates, take the first with plausible data.
             ranked = _lookup_usda(name)
             chosen, per_100g = None, None
             for food in ranked[:8]:
@@ -596,7 +556,7 @@ def analyze_nutrition(state: FoodState) -> FoodState:
                         continue
                     alt = _extract_usda_nutrients_per_100g(food)
                     if alt.get("calories") is None or food.get("description") == chosen.get("description"):
-                        continue  # skip duplicates / records with no energy value
+                        continue  
                     alts.append({"description": food.get("description"),
                                  "calories_per_100g": alt.get("calories")})
                 normalized = _normalize_per_100g(per_100g)
@@ -607,7 +567,6 @@ def analyze_nutrition(state: FoodState) -> FoodState:
                                                 chosen.get("description"), alts[:3]))
                 continue
 
-            # 3. Open Food Facts (branded/packaged products), then 4. AI estimate.
             off_nutrients = _lookup_off(name)
             if _has_valid_calories(off_nutrients) and _is_plausible(off_nutrients):
                 items_result.append(_build_item(name, off_nutrients, item, [], "off", None))
@@ -618,7 +577,6 @@ def analyze_nutrition(state: FoodState) -> FoodState:
                 items_result.append(_build_item(name, ai_nutrients, item, [], "ai_estimate", None))
                 continue
 
-            # Nothing usable anywhere: report honestly as NOT FOUND (never a fake 0).
             items_result.append({
                 "name": name,
                 "calories": 0, "protein_g": 0, "carbs_g": 0, "fat_g": 0, "sugar_g": 0,
@@ -627,7 +585,6 @@ def analyze_nutrition(state: FoodState) -> FoodState:
                 "unit_conversion_estimated": False,
             })
     except USDALookupError as exc:
-        # System-level failure in the PRIMARY source - flag for retry.
         print(f"[analyzer_node] {exc}")
         state["error"] = str(exc)
         return state

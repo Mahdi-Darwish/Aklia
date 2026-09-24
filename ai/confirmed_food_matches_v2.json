@@ -97,5 +97,38 @@
       "fat_g": 7.47,
       "sugar_g": 0.34
     }
+  },
+  "rice": {
+    "fdc_id": 168878,
+    "description": "Rice, white, long-grain, regular, enriched, cooked",
+    "per_100g": {
+      "calories": 130,
+      "protein_g": 2.69,
+      "carbs_g": 28.2,
+      "fat_g": 0.28,
+      "sugar_g": 0.05
+    }
+  },
+  "chicken, grilled": {
+    "fdc_id": 171534,
+    "description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, grilled",
+    "per_100g": {
+      "calories": 151,
+      "protein_g": 30.5,
+      "carbs_g": 0.0,
+      "fat_g": 3.17,
+      "sugar_g": 0.0
+    }
+  },
+  "chicken breast, grilled": {
+    "fdc_id": 171534,
+    "description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, grilled",
+    "per_100g": {
+      "calories": 151,
+      "protein_g": 30.5,
+      "carbs_g": 0.0,
+      "fat_g": 3.17,
+      "sugar_g": 0.0
+    }
   }
 }

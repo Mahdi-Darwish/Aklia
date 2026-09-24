@@ -326,6 +326,7 @@ label {
 }
 
 input,
+select,
 textarea {
     width: 100%;
 
@@ -351,11 +352,13 @@ textarea {
 }
 
 input::placeholder,
+select::placeholder,
 textarea::placeholder {
     color: #696d70;
 }
 
 input:focus,
+select:focus,
 textarea:focus {
     border-color: rgba(255,105,92,0.65);
 
@@ -363,6 +366,71 @@ textarea:focus {
 
     box-shadow:
         0 0 0 4px rgba(255,105,92,0.08);
+}
+
+select option {
+    background: #1a1c1e;
+    color: var(--text);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 16px;
+}
+
+.profile-grid .form-group {
+    margin-bottom: 0;
+}
+
+.profile-grid .span-2 {
+    grid-column: 1 / -1;
+}
+
+.profile-grid label {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.targets-card .targets-summary {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.target-row {
+    margin-bottom: 14px;
+}
+
+.target-row-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.target-row-top span:last-child {
+    color: var(--muted);
+}
+
+.target-bar {
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.target-bar > div {
+    height: 100%;
+    border-radius: 99px;
+}
+
+.targets-note {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 4px;
 }
 
 textarea {
@@ -1158,10 +1226,6 @@ footer {
 
     <div class="brand">
 
-        <div class="brand-mark">
-            P
-        </div>
-
         Aklia
 
     </div>
@@ -1248,6 +1312,61 @@ footer {
                 name="goal"
                 placeholder="Lose fat, gain muscle, maintain weight..."
             >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+
+                About you
+
+                <span class="optional">
+                    Optional · makes the advice more accurate
+                </span>
+
+            </label>
+
+            <div class="profile-grid">
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" min="14" max="100" step="1" placeholder="25" inputmode="numeric">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="">Select...</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" name="height" min="120" max="230" step="1" placeholder="175" inputmode="decimal">
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" name="weight" min="30" max="300" step="0.1" placeholder="75" inputmode="decimal">
+                </div>
+
+                <div class="form-group span-2">
+                    <label for="activity">Activity level</label>
+                    <select id="activity" name="activity">
+                        <option value="">Select...</option>
+                        <option value="sedentary">Sedentary - desk job, little or no exercise</option>
+                        <option value="light">Lightly active - exercise 1-3 days/week</option>
+                        <option value="moderate">Moderately active - exercise 3-5 days/week</option>
+                        <option value="active">Very active - hard exercise 6-7 days/week</option>
+                        <option value="very_active">Extra active - physical job + daily training</option>
+                    </select>
+                </div>
+
+            </div>
 
         </div>
 
@@ -1542,6 +1661,70 @@ function renderResults(data) {
        GOAL ANALYSIS
     ----------------------------------------------------- */
 
+    const targetsHTML = (() => {
+
+        const t = data.targets;
+
+        if (!t) {
+            return "";
+        }
+
+        const goalLabel = {
+            lose: "fat loss",
+            gain: "muscle gain",
+            maintain: "maintenance",
+            unspecified: "maintenance"
+        }[t.goal_type] || "maintenance";
+
+        const bar = (label, eaten, target, unit, color) => {
+
+            const pct = target > 0
+                ? Math.min(100, Math.round((eaten / target) * 100))
+                : 0;
+
+            return `
+                <div class="target-row">
+                    <div class="target-row-top">
+                        <span>${label}</span>
+                        <span>${Math.round(eaten)} / ${target} ${unit}</span>
+                    </div>
+                    <div class="target-bar">
+                        <div style="width:${pct}%; background:${color};"></div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const notes = (t.notes || [])
+            .map((n) => `<div class="targets-note">${escapeHtml(n)}</div>`)
+            .join("");
+
+        return `
+            <div class="card targets-card">
+
+                <div class="card-label">
+                    Your daily targets
+                </div>
+
+                <div class="targets-summary">
+                    Goal: ${goalLabel} ·
+                    maintenance ≈ ${t.maintenance_kcal} kcal ·
+                    ${t.activity_label} · BMI ${t.bmi}
+                </div>
+
+                ${bar("Calories", totals.calories || 0, t.target_kcal, "kcal", "#ff695c")}
+                ${bar("Protein", totals.protein_g || 0, t.protein_g, "g", "var(--protein)")}
+                ${bar("Carbs", totals.carbs_g || 0, t.carbs_g, "g", "var(--carbs)")}
+                ${bar("Fat", totals.fat_g || 0, t.fat_g, "g", "var(--fat)")}
+
+                ${notes}
+
+            </div>
+        `;
+
+    })();
+
+
     const goalHTML =
         data.goal_analysis
             ? `
@@ -1765,6 +1948,9 @@ function renderResults(data) {
             </div>
 
 
+            ${targetsHTML}
+
+
             ${goalHTML}
 
 
@@ -1840,6 +2026,21 @@ form.addEventListener(
         }
 
 
+        // Optional profile - only used when all five fields are filled in.
+        const numOrNull = (id) => {
+            const v = parseFloat(document.getElementById(id).value);
+            return Number.isFinite(v) ? v : null;
+        };
+
+        const profile = {
+            age: numOrNull("age"),
+            gender: document.getElementById("gender").value || null,
+            height_cm: numOrNull("height"),
+            weight_kg: numOrNull("weight"),
+            activity: document.getElementById("activity").value || null
+        };
+
+
         submitBtn.disabled = true;
 
         submitBtn.querySelector("span:first-child")
@@ -1867,7 +2068,8 @@ form.addEventListener(
 
                         body: JSON.stringify({
                             goal,
-                            meals
+                            meals,
+                            ...profile
                         })
                     }
                 );

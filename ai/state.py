@@ -9,3 +9,5 @@ class FoodState(TypedDict):
     retry_count : int
     parser_retry_count: int
     error : Optional[str]
+    profile:Dict     
+    targets : Dict
